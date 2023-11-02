@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.c195.tylersmall.c195project_tylersmall/Model.HelloApplication
+                                com.c195.tylersmall.c195project_tylersmall/Model.Application
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
