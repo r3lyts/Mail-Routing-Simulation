@@ -3,6 +3,8 @@ module com.c195.tylersmall.c195project_tylersmall {
     requires javafx.fxml;
 
 
-    opens com.c195.tylersmall.c195project_tylersmall to javafx.fxml;
-    exports com.c195.tylersmall.c195project_tylersmall;
+    opens Model to javafx.fxml;
+    exports Model;
+    exports Controller;
+    opens Controller to javafx.fxml;
 }

@@ -1,2 +1,5 @@
-package Controller;public class LoginController {
+package Controller;
+
+public class LoginController {
+
 }
