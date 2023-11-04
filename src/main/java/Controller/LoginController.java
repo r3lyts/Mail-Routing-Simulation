@@ -1,14 +1,17 @@
 package Controller;
 
 import DAO.UserDAOImp;
+import Helper.Helper;
 import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.ZoneId;
 
@@ -27,15 +30,15 @@ public class LoginController {
         updateTimezoneLabel();
     }
     @FXML
-    void onActionLogin(ActionEvent event) throws SQLException {
+    void onActionLogin(ActionEvent event) throws SQLException, IOException {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
         if (isValidLogin(username, password)) {
-            System.out.println("SUCCESS");
+            Helper.nextView("/Model/New-form.fxml", event);
         }
         else {
-            System.out.println("FALSE");
+            Helper.displayAlert("Login Error", "Invalid Credentials", "Username or password is incorrect.", Alert.AlertType.ERROR);
         }
     }
 
