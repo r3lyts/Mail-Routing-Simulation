@@ -5,15 +5,14 @@ import Helper.Helper;
 import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoginController {
 
@@ -23,11 +22,23 @@ public class LoginController {
     private PasswordField passwordField;
     @FXML
     private Label timeZoneLabel;
+    @FXML
+    private Button loginButton;
+    @FXML
+    private Label passwordLabel;
+    @FXML
+    private Label usernameLabel;
+
     private UserDAOImp userDAO = new UserDAOImp();
 
+    Locale defaultLocale = Locale.getDefault();
+    ResourceBundle bundle = ResourceBundle.getBundle("MessagesBundle", defaultLocale);
 
     public void initialize() {
         updateTimezoneLabel();
+        usernameLabel.setText(bundle.getString("login.username"));
+        passwordLabel.setText(bundle.getString("login.password"));
+        loginButton.setText(bundle.getString("login.login"));
     }
     @FXML
     void onActionLogin(ActionEvent event) throws SQLException, IOException {
@@ -38,7 +49,7 @@ public class LoginController {
             Helper.nextView("/Model/New-form.fxml", event);
         }
         else {
-            Helper.displayAlert("Login Error", "Invalid Credentials", "Username or password is incorrect.", Alert.AlertType.ERROR);
+            Helper.displayAlert(bundle.getString("login.loginErrorTitle"), bundle.getString("login.loginErrorHeader"), bundle.getString("login.loginErrorMessage"), Alert.AlertType.ERROR);
         }
     }
 
