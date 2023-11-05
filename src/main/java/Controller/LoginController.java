@@ -6,7 +6,6 @@ import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,7 +45,7 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (isValidLogin(username, password)) {
-            Helper.nextView("/Model/New-form.fxml", event);
+            Helper.nextView("/Model/CustAndAppt.fxml", event);
         }
         else {
             Helper.displayAlert(bundle.getString("login.loginErrorTitle"), bundle.getString("login.loginErrorHeader"), bundle.getString("login.loginErrorMessage"), Alert.AlertType.ERROR);

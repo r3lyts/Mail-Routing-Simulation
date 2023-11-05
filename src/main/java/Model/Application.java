@@ -1,5 +1,6 @@
 package Model;
 
+import DAO.CountryDAOImp;
 import DAO.DBConnection;
 import DAO.UserDAO;
 import DAO.UserDAOImp;
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.util.List;
 
 public class Application extends javafx.application.Application {
     @Override
@@ -23,10 +25,13 @@ public class Application extends javafx.application.Application {
 
     public static void main(String[] args) throws SQLException{
         DBConnection.openConnection();
-        launch();
-        UserDAOImp test = new UserDAOImp();
-        int rowsAffected = test.delete(3);
-        System.out.println(rowsAffected);
+        //launch();
+
+        CountryDAOImp cdi = new CountryDAOImp();
+        List<Country> listOfCountries= cdi.findAll();
+
+        for (Country c : listOfCountries)
+        System.out.println(c);
 
         DBConnection.closeConnection();
     }
