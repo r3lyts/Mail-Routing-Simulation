@@ -10,7 +10,20 @@ public class FirstLevelDivision {
     private String createdBy;
     private Instant lastUpdate;
     private String lastUpdatedBy;
-    private Country countryID;
+    private int countryID;
+
+    @Override
+    public String toString() {
+        return "FirstLevelDivision{" +
+                "Division_ID=" + divisionID +
+                ", Division='" + Division + '\'' +
+                ", createDate=" + createDate +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastUpdate=" + lastUpdate +
+                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
+                ", Country_ID='" + countryID + '\'' +
+                '}';
+    }
 
     public int getDivisionID() {
         return divisionID;
@@ -60,11 +73,11 @@ public class FirstLevelDivision {
         this.lastUpdatedBy = lastUpdatedBy;
     }
 
-    public Country getCountryID() {
+    public int getCountryID() {
         return countryID;
     }
 
-    public void setCountryID(Country countryID) {
+    public void setCountryID(int countryID) {
         this.countryID = countryID;
     }
 }

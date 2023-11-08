@@ -6,13 +6,29 @@ public class Customer {
     private int customerID;
     private String name;
     private String address;
-    private int postalCode;
+    private String postalCode;
     private String phone;
-    private FirstLevelDivision divisionID;
+    private int divisionID;
     private Instant createDate;
     private String createdBy;
     private Instant lastUpdate;
     private String lastUpdatedBy;
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "Customer_ID=" + customerID +
+                ", Customer_Name='" + name + '\'' +
+                ", Address='" + address + '\'' +
+                ", Postal_Code='" + postalCode + '\'' +
+                ", Phone='" + phone + '\'' +
+                ", createDate=" + createDate +
+                ", createdBy='" + createdBy + '\'' +
+                ", lastUpdate=" + lastUpdate +
+                ", lastUpdatedBy='" + lastUpdatedBy + '\'' +
+                ", Division_ID='" + divisionID + '\'' +
+                '}';
+    }
 
     public int getCustomerID() {
         return customerID;
@@ -38,11 +54,11 @@ public class Customer {
         this.address = address;
     }
 
-    public int getPostalCode() {
+    public String getPostalCode() {
         return postalCode;
     }
 
-    public void setPostalCode(int postalCode) {
+    public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
 
@@ -54,11 +70,11 @@ public class Customer {
         this.phone = phone;
     }
 
-    public FirstLevelDivision getDivisionID() {
+    public int getDivisionID() {
         return divisionID;
     }
 
-    public void setDivisionID(FirstLevelDivision divisionID) {
+    public void setDivisionID(int divisionID) {
         this.divisionID = divisionID;
     }
 

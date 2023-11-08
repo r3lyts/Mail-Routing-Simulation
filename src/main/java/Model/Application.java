@@ -1,9 +1,6 @@
 package Model;
 
-import DAO.CountryDAOImp;
-import DAO.DBConnection;
-import DAO.UserDAO;
-import DAO.UserDAOImp;
+import DAO.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -11,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Application extends javafx.application.Application {
@@ -26,13 +24,15 @@ public class Application extends javafx.application.Application {
     public static void main(String[] args) throws SQLException{
         DBConnection.openConnection();
         //launch();
+        Customer customer = new Customer();
+        List<Customer> customerList = new ArrayList<>();
 
-        CountryDAOImp cdi = new CountryDAOImp();
-        List<Country> listOfCountries= cdi.findAll();
+        CustomerDAOImp cdi = new CustomerDAOImp();
+        customerList = cdi.findAllCustomers();
 
-        for (Country c : listOfCountries)
-        System.out.println(c);
-
+        for (Customer c : customerList) {
+            System.out.println(c);
+        }
         DBConnection.closeConnection();
     }
 }
