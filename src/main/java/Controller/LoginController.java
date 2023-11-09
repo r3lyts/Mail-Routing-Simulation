@@ -2,6 +2,7 @@ package Controller;
 
 import DAO.UserDAOImp;
 import Helper.Helper;
+import Helper.SessionManager;
 import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,8 +60,10 @@ public class LoginController {
 
     public boolean isValidLogin(String username, String password) throws SQLException {
         User user = userDAO.findUserByUsername(username);
-         if (user != null) {
-             return user.getPassword().equals(password);
+
+         if (user != null && user.getPassword().equals(password)) {
+             SessionManager.setCurrentUser(user);
+             return true;
          }
 
          return false;

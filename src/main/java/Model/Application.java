@@ -1,6 +1,7 @@
 package Model;
 
 import DAO.*;
+import Helper.SessionManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,16 +24,12 @@ public class Application extends javafx.application.Application {
 
     public static void main(String[] args) throws SQLException{
         DBConnection.openConnection();
-        //launch();
+        launch();
         Customer customer = new Customer();
-        List<Customer> customerList = new ArrayList<>();
-
+        customer.setName("BILLY");
+        customer.setDivisionID(2);
         CustomerDAOImp cdi = new CustomerDAOImp();
-        customerList = cdi.findAllCustomers();
-
-        for (Customer c : customerList) {
-            System.out.println(c);
-        }
+        cdi.addCustomer(customer);
         DBConnection.closeConnection();
     }
 }
