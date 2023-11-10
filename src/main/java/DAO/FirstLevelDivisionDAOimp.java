@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirstLevelDivisionDAOimp {
+public class FirstLevelDivisionDAOimp implements FirstLevelDivisionDAO {
 
     public FirstLevelDivision findByID(int fldID) throws SQLException {
         FirstLevelDivision fld = null;

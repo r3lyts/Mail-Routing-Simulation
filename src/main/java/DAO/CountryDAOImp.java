@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CountryDAOImp {
+public class CountryDAOImp implements CountryDAO{
 
         public Country findByID(int countryID) throws SQLException {
             Country country = null;

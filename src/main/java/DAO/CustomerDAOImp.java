@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerDAOImp {
+public class CustomerDAOImp implements CustomerDAO{
 
     public int addCustomer(Customer customer) throws SQLException {
         Instant now = Instant.now();
@@ -38,8 +38,27 @@ public class CustomerDAOImp {
         //delete appointments first
         return 0;
     }
-    public int updateCustomer(int customerID) {
-        return 0;
+    public int updateCustomer(Customer customer) throws SQLException {
+        if (findByCustomerID(customer.getCustomerID()) == null) {
+            return 0;
+        }
+        else {
+            //update customer
+            String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ?";
+            PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
+
+            ps.setString(1, customer.getName());
+            ps.setString(2, customer.getAddress());
+            ps.setString(3, customer.getPostalCode());
+            ps.setString(4, customer.getPhone());
+            ps.setTimestamp(5, Timestamp.from(Instant.now()));
+            ps.setString(6, SessionManager.getCurrentUser().getUsername());
+            ps.setInt(7, customer.getDivisionID());
+
+            return ps.executeUpdate();
+
+        }
+
     }
 
     public Customer findByCustomerID(int customerID) throws SQLException {

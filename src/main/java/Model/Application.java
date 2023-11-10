@@ -25,11 +25,7 @@ public class Application extends javafx.application.Application {
     public static void main(String[] args) throws SQLException{
         DBConnection.openConnection();
         launch();
-        Customer customer = new Customer();
-        customer.setName("BILLY");
-        customer.setDivisionID(2);
-        CustomerDAOImp cdi = new CustomerDAOImp();
-        cdi.addCustomer(customer);
+
         DBConnection.closeConnection();
     }
 }
