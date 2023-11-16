@@ -1,6 +1,7 @@
 package Model;
 
 import java.time.Instant;
+import java.util.Map;
 
 public class Customer {
     private int customerID;
@@ -13,6 +14,7 @@ public class Customer {
     private String createdBy;
     private Instant lastUpdate;
     private String lastUpdatedBy;
+    private static Map<Integer, String> divisionMap;
 
     @Override
     public String toString() {
@@ -109,4 +111,14 @@ public class Customer {
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
     }
+
+    public static void setDivisionMap(Map<Integer, String> map) {
+        Customer.divisionMap = map;
+    }
+
+    public String getDivisionName() {
+        return divisionMap.get(this.divisionID);
+    }
+
+
 }

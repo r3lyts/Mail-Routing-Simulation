@@ -9,7 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FirstLevelDivisionDAOimp implements FirstLevelDivisionDAO {
 
@@ -102,4 +104,24 @@ public class FirstLevelDivisionDAOimp implements FirstLevelDivisionDAO {
 
         return fldList;
     }
+
+    public Map<Integer, String> getAllDivisons() throws SQLException {
+        Map<Integer, String> divisions = new HashMap<>();
+
+        String sql = "SELECT * FROM FIRST_LEVEL_DIVISIONS";
+        PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()) {
+            int id = rs.getInt("Division_ID");
+            String name = rs.getString("Division");
+
+            divisions.put(id, name);
+
+        }
+        return divisions;
+    }
+
+
+
 }

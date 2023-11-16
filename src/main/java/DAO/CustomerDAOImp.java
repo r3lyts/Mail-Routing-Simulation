@@ -44,7 +44,7 @@ public class CustomerDAOImp implements CustomerDAO{
         }
         else {
             //update customer
-            String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ?";
+            String sql = "UPDATE CUSTOMERS SET Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
             PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
 
             ps.setString(1, customer.getName());
@@ -54,6 +54,7 @@ public class CustomerDAOImp implements CustomerDAO{
             ps.setTimestamp(5, Timestamp.from(Instant.now()));
             ps.setString(6, SessionManager.getCurrentUser().getUsername());
             ps.setInt(7, customer.getDivisionID());
+            ps.setInt(8, customer.getCustomerID());
 
             return ps.executeUpdate();
 
