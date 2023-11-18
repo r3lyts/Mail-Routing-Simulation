@@ -1,8 +1,8 @@
 package Controller;
 
 import DAO.UserDAOImp;
-import Helper.Helper;
-import Helper.SessionManager;
+import HelperClasses.Helper;
+import HelperClasses.SessionManager;
 import Model.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

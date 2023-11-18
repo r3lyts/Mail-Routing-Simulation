@@ -1,16 +1,12 @@
 package Model;
 
 import DAO.*;
-import Helper.SessionManager;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Application extends javafx.application.Application {
     @Override

@@ -1,4 +1,4 @@
-package Helper;
+package HelperClasses;
 
 import Model.User;
 

@@ -10,8 +10,17 @@ import java.util.Map;
 public interface FirstLevelDivisionDAO {
 
     FirstLevelDivision findByID(int fldID) throws SQLException;
+
     List<FirstLevelDivision> findAll() throws SQLException;
 
     List<FirstLevelDivision> findByCountryID(int countryID) throws SQLException;
+
     Map<Integer, String> getAllDivisons() throws SQLException;
+
+    List<FirstLevelDivision> findByCountryName(String countryName) throws SQLException;
+
+    int findIDByStateName(String stateName) throws SQLException;
+
 }
+
+

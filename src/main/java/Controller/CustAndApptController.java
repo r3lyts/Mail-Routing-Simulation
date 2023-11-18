@@ -1,19 +1,26 @@
 package Controller;
 
 import DAO.*;
+import HelperClasses.Helper;
 import Model.Appointment;
 import Model.Customer;
-import Model.FirstLevelDivision;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -81,8 +88,8 @@ public class CustAndApptController implements Initializable {
     }
 
     @FXML
-    void onActionAddCustomer(ActionEvent event) {
-
+    void onActionAddCustomer(ActionEvent event) throws IOException {
+        Helper.nextView("/Model/AddCustomerForm.fxml", event);
     }
 
     @FXML
@@ -91,13 +98,23 @@ public class CustAndApptController implements Initializable {
     }
 
     @FXML
-    void onActionDeleteCustomer(ActionEvent event) {
+    void onActionDeleteCustomer(ActionEvent event) throws SQLException {
+        Customer selectedCustomer = CustomerTableView.getSelectionModel().getSelectedItem();
+        CustomerDAO customerDAO = new CustomerDAOImp();
 
+        if (selectedCustomer != null) {
+            customerDAO.deleteCustomer(selectedCustomer.getCustomerID());
+            CustomerTableView.getItems().remove(selectedCustomer);
+            Helper.displayAlert("Customer Deletion", "Customer Deletion", "Customer was successfully deleted.", Alert.AlertType.INFORMATION);
+        }
+        else {
+            Helper.displayAlert("Select an Item", "No Customer was Selected", "In order to delete, please select a Customer.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
-    void onActionLogout(ActionEvent event) {
-
+    void onActionLogout(ActionEvent event) throws IOException {
+        Helper.nextView("/Model/login-form.fxml", event);
     }
 
     @FXML
@@ -106,8 +123,26 @@ public class CustAndApptController implements Initializable {
     }
 
     @FXML
-    void onActionUpdateCustomer(ActionEvent event) {
+    void onActionUpdateCustomer(ActionEvent event) throws SQLException, IOException {
+        Customer selectedCustomer = CustomerTableView.getSelectionModel().getSelectedItem();
 
+        if (selectedCustomer != null) {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/Model/UpdateCustomerForm.fxml"));
+            Parent updateView = loader.load();
+
+            UpdateCustomerController uCC = loader.getController();
+            uCC.sendCustomer(selectedCustomer);
+
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(updateView));
+            stage.show();
+            Helper.centerStage(stage);
+        }
+        else {
+            Helper.displayAlert("Select an Item", "No Customer Was Selected", "In order to update, please select a customer", Alert.AlertType.ERROR);
+
+        }
     }
 
     @Override
@@ -155,4 +190,6 @@ public class CustAndApptController implements Initializable {
         appointmentCustomerIDColum.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         appointmentUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
     }
+
+
 }

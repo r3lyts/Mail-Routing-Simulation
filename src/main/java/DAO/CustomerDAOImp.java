@@ -1,7 +1,6 @@
 package DAO;
 
-import Helper.SessionManager;
-import Model.Country;
+import HelperClasses.SessionManager;
 import Model.Customer;
 
 import java.sql.PreparedStatement;
@@ -34,9 +33,13 @@ public class CustomerDAOImp implements CustomerDAO{
         return rowsAffected;
 
     }
-    public int deleteCustomer(int customerID) {
+    public int deleteCustomer(int customerID) throws SQLException {
         //delete appointments first
-        return 0;
+        String sql = "DELETE FROM CUSTOMERS WHERE Customer_ID = ?";
+        PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
+        ps.setInt(1, customerID);
+
+        return ps.executeUpdate();
     }
     public int updateCustomer(Customer customer) throws SQLException {
         if (findByCustomerID(customer.getCustomerID()) == null) {

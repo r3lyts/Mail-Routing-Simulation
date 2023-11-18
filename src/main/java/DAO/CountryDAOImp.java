@@ -72,5 +72,35 @@ public class CountryDAOImp implements CountryDAO{
         return listOfCountries;
     }
 
+    public Country findByCountryName(String countryName) throws SQLException {
+
+            Country country = null;
+            String sql = "SELECT * FROM COUNTRIES WHERE Country = ?";
+
+            PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
+            ps.setString(1, countryName);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                country = new Country();
+                country.setCountryID(rs.getInt("Country_ID"));
+                country.setCountry(rs.getString("Country"));
+                Timestamp createDateTimestamp = rs.getTimestamp("Create_Date");
+                if (createDateTimestamp != null) {
+                    country.setCreateDate(createDateTimestamp.toInstant());
+                }
+                country.setCreatedBy(rs.getString("Created_By"));
+                Timestamp lastUpdateTimestamp = rs.getTimestamp("Last_Update");
+                if (lastUpdateTimestamp != null) {
+                    country.setLastUpdate(lastUpdateTimestamp.toInstant());
+                }
+                country.setLastUpdatedBy(rs.getString("Last_Updated_By"));
+            }
+            return country;
+        }
+
+
+
 
 }

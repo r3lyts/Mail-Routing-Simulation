@@ -1,18 +1,17 @@
-package Helper;
+package HelperClasses;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class Helper {
 
@@ -35,5 +34,18 @@ public class Helper {
 
         stage.setScene(new Scene(scene));
         stage.show();
+        centerStage(stage);
+    }
+
+    public static void centerStage(Stage stage) {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+        // Calculate the center position
+        double centerXPosition = screenBounds.getMinX() + (screenBounds.getWidth() - stage.getWidth()) / 2;
+        double centerYPosition = screenBounds.getMinY() + (screenBounds.getHeight() - stage.getHeight()) / 2;
+
+        // Set position of stage
+        stage.setX(centerXPosition);
+        stage.setY(centerYPosition);
     }
 }

@@ -1,6 +1,6 @@
 package DAO;
 
-import Helper.SessionManager;
+import HelperClasses.SessionManager;
 import Model.Appointment;
 
 import java.sql.*;

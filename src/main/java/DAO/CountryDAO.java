@@ -8,4 +8,5 @@ import java.util.List;
 public interface CountryDAO {
     Country findByID(int countryID) throws SQLException;
     List<Country> findAll() throws SQLException;
+    Country findByCountryName(String countryName) throws SQLException;
 }
