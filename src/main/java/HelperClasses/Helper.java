@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Helper {
 
@@ -48,4 +52,26 @@ public class Helper {
         stage.setX(centerXPosition);
         stage.setY(centerYPosition);
     }
+
+    /**
+     * Generate Time slots for any combo box that needs time.
+     */
+    public static List<String> generateTimeSlots() {
+        List<String> timeSlots = new ArrayList<>();
+        LocalTime startTime = LocalTime.of(8, 0); // Starting at 8:00
+        LocalTime endTime = LocalTime.of(23, 45); // Ending at 23:45
+        LocalTime time = startTime;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        do {
+            timeSlots.add(time.format(formatter));
+            time = time.plusMinutes(15);
+        } while (!time.isAfter(endTime) && !time.isBefore(startTime));
+
+        return timeSlots;
+    }
+
+
+
+
 }

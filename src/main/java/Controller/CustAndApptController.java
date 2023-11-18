@@ -83,8 +83,8 @@ public class CustAndApptController implements Initializable {
     private TableColumn<Customer, String> customerStateColumn;
 
     @FXML
-    void onActionAddAppointment(ActionEvent event) {
-
+    void onActionAddAppointment(ActionEvent event) throws IOException {
+        Helper.nextView("/Model/AddAppointmentForm.fxml", event);
     }
 
     @FXML

@@ -5,6 +5,8 @@ import Model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAOImp implements UserDAO{
 
@@ -44,6 +46,25 @@ public class UserDAOImp implements UserDAO{
         return ps.executeUpdate();
 
 
+    }
+
+    public List<User> findAll() throws SQLException {
+        User user = null;
+        List<User> userList = new ArrayList<>();
+
+        String sql = "Select * FROM users";
+        PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            user = new User();
+            user.setUserID(rs.getInt("User_ID"));
+            user.setUsername(rs.getString("User_Name"));
+            user.setPassword(rs.getString("Password"));
+            userList.add(user);
+        }
+        return userList;
     }
 
 }
