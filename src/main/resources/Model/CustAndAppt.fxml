@@ -2,8 +2,10 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -76,5 +78,12 @@
          </font>
       </Label>
       <Line endX="1102.0" layoutX="178.0" layoutY="319.0" startX="-178.0" />
+      <RadioButton layoutX="845.0" layoutY="75.0" mnemonicParsing="false" onAction="#allAppointmentsRadioButton" selected="true" text="All Appointments">
+         <toggleGroup>
+            <ToggleGroup fx:id="appointmentSelection" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="709.0" layoutY="75.0" mnemonicParsing="false" onAction="#currentMonthRadioButton" text="Current Month" toggleGroup="$appointmentSelection" />
+      <RadioButton layoutX="576.0" layoutY="75.0" mnemonicParsing="false" onAction="#currentWeekRadioButton" text="Current Week" toggleGroup="$appointmentSelection" />
    </children>
 </AnchorPane>

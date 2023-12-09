@@ -3,7 +3,6 @@ package Controller;
 import DAO.*;
 import HelperClasses.Helper;
 import HelperClasses.SessionManager;
-import Model.Appointment;
 import Model.Contact;
 import Model.Customer;
 import Model.User;
@@ -15,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import Model.Appointment;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- *
- */
-public class AddAppointmentController implements Initializable {
+public class UpdateAppointmentController implements Initializable {
+
+    @FXML
+    private TextField idTextField;
 
     @FXML
     private ComboBox<String> contactComboBox;
@@ -68,10 +68,11 @@ public class AddAppointmentController implements Initializable {
         Helper.nextView("/Model/CustAndAppt.fxml", event);
     }
 
+
     @FXML
     void onActionSave(ActionEvent event) throws SQLException, IOException {
-        Appointment appointment = new Appointment();
         AppointmentDAO appointmentDAO = new AppointmentDAOImp();
+        Appointment appointment = appointmentDAO.findByID(Integer.parseInt(idTextField.getText()));
         ContactDAO contactDAO = new ContactDAOImp();
 
 
@@ -79,6 +80,7 @@ public class AddAppointmentController implements Initializable {
             LocalDateTime startLocalTime = Helper.combineDateAndTime(startDatePicker.getValue(), startTimeComboBox.getValue());
             LocalDateTime endLocalTime = Helper.combineDateAndTime(endDatePicker.getValue(), endTimeComboBox.getValue());
 
+            appointment.setAppointmentID(Integer.parseInt(idTextField.getText()));
             appointment.setTitle(titleTextField.getText());
             appointment.setType(typeTextField.getText());
             appointment.setDescription(descriptionTextField.getText());
@@ -93,7 +95,7 @@ public class AddAppointmentController implements Initializable {
             appointment.setCustomerID(customerIDComboBox.getValue());
             appointment.setContactID(contactDAO.getContactIDbyName(contactComboBox.getValue()));
 
-            appointmentDAO.addAppointment(appointment);
+            appointmentDAO.updateAppointment(appointment);
             Helper.nextView("/Model/CustAndAppt.fxml", event);
 
 
@@ -104,7 +106,7 @@ public class AddAppointmentController implements Initializable {
     public boolean isValidAppointment(Appointment appointment) throws SQLException {
         //Checks Text fields to see if they are empty
         if (typeTextField.getText().isEmpty() || titleTextField.getText().isEmpty() || locationTextField.getText().isEmpty()
-            || descriptionTextField.getText().isEmpty()) {
+                || descriptionTextField.getText().isEmpty()) {
             Helper.displayAlert("Blank Text Field", "Empty Text Field", "Please ensure all text fields have values", Alert.AlertType.ERROR);
             return false;
         }
@@ -149,13 +151,12 @@ public class AddAppointmentController implements Initializable {
             return false;
         }
 
-        //checks contacts for simultaneous appointments
-        if (contactComboBox != null) {
+        //checks customers for simultaneous appointments
+        if (customerIDComboBox != null) {
             for (Appointment appointment : appointments) {
-                String contactName = contactDAO.getContactName(appointment.getContactID());
-                if (contactComboBox.getValue().equals(contactName)) {
+                if ((customerIDComboBox.getValue() == appointment.getCustomerID()) && (appointment.getAppointmentID() != Integer.parseInt(idTextField.getText()))) {
                     if (Helper.convertUTCToLocal(appointment.getStartTime()).isBefore(endTime) && startTime.isBefore(Helper.convertUTCToLocal(appointment.getEndTime()))) {
-                        Helper.displayAlert("Scheduling Conflict", "The contact has conflicting appointments", "Please schedule a start and end time where the contact has no appointments scheduled.", Alert.AlertType.ERROR);
+                        Helper.displayAlert("Scheduling Conflict", "The customer has conflicting appointments", "Please schedule a start and end time where the customer has no appointments scheduled.", Alert.AlertType.ERROR);
                         return false;
                     }
                 }
@@ -182,6 +183,39 @@ public class AddAppointmentController implements Initializable {
         return easternZonedDateTime;
     }
 
+
+    public void sendAppointment(Appointment appointment) throws SQLException {
+        //Text fields
+        idTextField.setText(String.valueOf(appointment.getAppointmentID()));
+        titleTextField.setText(appointment.getTitle());
+        typeTextField.setText(appointment.getType());
+        descriptionTextField.setText(appointment.getDescription());
+        locationTextField.setText(appointment.getLocation());
+
+        //Combo Boxes
+        userIDComboBox.setValue(appointment.getUserID());
+        customerIDComboBox.setValue(appointment.getCustomerID());
+        ContactDAO contactDAO = new ContactDAOImp();
+        String contactName = contactDAO.getContactName(appointment.getContactID());
+        contactComboBox.setValue(contactName);
+
+        //Dates
+        LocalDateTime localStartTime = appointment.getStartTime().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDate startDate = localStartTime.toLocalDate();
+        LocalTime startTime = localStartTime.toLocalTime();
+        LocalDateTime localEndTime = appointment.getEndTime().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDate endDate = localEndTime.toLocalDate();
+        LocalTime endTime = localEndTime.toLocalTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String startTimeString = startTime.format(formatter);
+        String endTimeString = endTime.format(formatter);
+
+        startDatePicker.setValue(startDate);
+        startTimeComboBox.setValue(startTimeString);
+        endDatePicker.setValue(endDate);
+        endTimeComboBox.setValue(endTimeString);
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -218,4 +252,5 @@ public class AddAppointmentController implements Initializable {
         userIDComboBox.setItems(FXCollections.observableArrayList(userIDs));
         customerIDComboBox.setItems(FXCollections.observableArrayList(customerIDs));
     }
+
 }

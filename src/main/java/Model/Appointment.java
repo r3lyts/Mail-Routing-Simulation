@@ -1,6 +1,9 @@
 package Model;
 
+import HelperClasses.Helper;
+
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class Appointment {
     private int appointmentID;
@@ -17,6 +20,7 @@ public class Appointment {
     private int customerID;
     private int userID;
     private int contactID;
+
 
     public int getAppointmentID() {
         return appointmentID;
@@ -128,5 +132,13 @@ public class Appointment {
 
     public void setContactID(int contactID) {
         this.contactID = contactID;
+    }
+
+    public LocalDateTime getLocalStartTime() {
+        return Helper.convertUTCToLocal(startTime);
+    }
+
+    public LocalDateTime getLocalEndTime() {
+        return Helper.convertUTCToLocal(endTime);
     }
 }

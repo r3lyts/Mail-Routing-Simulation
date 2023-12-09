@@ -7,14 +7,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 
 import java.io.IOException;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Helper {
@@ -71,6 +73,35 @@ public class Helper {
         return timeSlots;
     }
 
+    public static Instant convertLocalToUTC(LocalDateTime localDateTime) {
+        ZoneId localZoneId = ZoneId.systemDefault(); // Gets the system's default time zone
+        ZonedDateTime localZonedDateTime = ZonedDateTime.of(localDateTime, localZoneId);
+        return localZonedDateTime.withZoneSameInstant(ZoneOffset.UTC).toInstant();
+    }
+
+    public static LocalDateTime convertUTCToLocal(Instant utcInstant) {
+        ZoneId localZoneId = ZoneId.systemDefault(); // Gets the system's default time zone
+        ZonedDateTime localZonedDateTime = utcInstant.atZone(ZoneOffset.UTC).withZoneSameInstant(localZoneId);
+        return localZonedDateTime.toLocalDateTime();
+    }
+
+    public static LocalDateTime combineDateAndTime(LocalDate localDate, String timeString) {
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime time = LocalTime.parse(timeString, timeFormatter);
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, time);
+
+        return localDateTime;
+    }
+
+    public static ZonedDateTime convertLocalToEastern(LocalDateTime localDateTime) {
+        ZoneId localZoneId = ZoneId.systemDefault(); // Local time zone
+        ZoneId easternZoneId = ZoneId.of("America/New_York"); // Eastern Time zone
+
+        ZonedDateTime localZonedDateTime = localDateTime.atZone(localZoneId);
+        ZonedDateTime easternZonedDateTime = localZonedDateTime.withZoneSameInstant(easternZoneId);
+
+        return easternZonedDateTime;
+    }
 
 
 

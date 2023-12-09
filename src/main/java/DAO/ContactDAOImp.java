@@ -10,6 +10,23 @@ import java.util.List;
 
 public class ContactDAOImp implements ContactDAO {
 
+    public int getContactIDbyName(String contactName) throws SQLException {
+        Contact contact = new Contact();
+        String sql = "SELECT * FROM CONTACTS WHERE Contact_Name = ?";
+        PreparedStatement ps = DBConnection.connection.prepareStatement(sql);
+        ps.setString(1, contactName);
+
+        ResultSet rs = ps.executeQuery();
+
+        while( rs.next()) {
+            contact.setContactID(rs.getInt("Contact_ID"));
+            contact.setContactName(rs.getString("Contact_Name"));
+            contact.setEmail(rs.getString("Email"));
+        }
+
+        return contact.getContactID();
+    }
+
     public String getContactName(int contactID) throws SQLException {
         Contact contact = new Contact();
         String sql = "SELECT * FROM CONTACTS WHERE Contact_ID = ?";

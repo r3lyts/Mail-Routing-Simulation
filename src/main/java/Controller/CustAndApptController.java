@@ -4,6 +4,8 @@ import DAO.*;
 import HelperClasses.Helper;
 import Model.Appointment;
 import Model.Customer;
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,10 +25,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.time.*;
+import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
+import java.util.*;
 
 public class CustAndApptController implements Initializable {
 
@@ -45,13 +47,13 @@ public class CustAndApptController implements Initializable {
     private TableColumn<Appointment, String> appointmentDescriptionColumn;
 
     @FXML
-    private TableColumn<Appointment, Instant> appointmentEndColumn;
+    private TableColumn<Appointment, LocalDateTime> appointmentEndColumn;
 
     @FXML
     private TableColumn<Appointment, Integer> appointmentIDColumn;
 
     @FXML
-    private TableColumn<Appointment, Instant> appointmentStartColumn;
+    private TableColumn<Appointment, LocalDateTime> appointmentStartColumn;
 
     @FXML
     private TableColumn<Appointment, String> appointmentTitleColumn;
@@ -82,6 +84,11 @@ public class CustAndApptController implements Initializable {
     @FXML
     private TableColumn<Customer, String> customerStateColumn;
 
+    private static boolean hasShowAlert = false;
+
+    private ObservableList<Customer> observableCustomerList = FXCollections.observableArrayList();
+    private ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList();
+
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException {
         Helper.nextView("/Model/AddAppointmentForm.fxml", event);
@@ -93,8 +100,20 @@ public class CustAndApptController implements Initializable {
     }
 
     @FXML
-    void onActionDeleteAppointment(ActionEvent event) {
+    void onActionDeleteAppointment(ActionEvent event) throws SQLException {
+        Appointment selectedAppointment = AppointmentTableView.getSelectionModel().getSelectedItem();
+        AppointmentDAO appointmentDAO = new AppointmentDAOImp();
 
+        if (selectedAppointment != null) {
+            String apptID = String.valueOf(selectedAppointment.getAppointmentID());
+            String apptType = selectedAppointment.getType();
+            appointmentDAO.deleteAppointment(selectedAppointment.getAppointmentID());
+            AppointmentTableView.getItems().remove(selectedAppointment);
+            Helper.displayAlert("Appointment Deletion", "Appointment was successfully deleted.", "Appointment ID: " + apptID + " and Type: " + apptType + " was successfully deleted", Alert.AlertType.INFORMATION);
+        }
+        else {
+            Helper.displayAlert("Select an Item", "No Appointment was Selected", "In order to delete, please select an Appointment.", Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
@@ -118,8 +137,26 @@ public class CustAndApptController implements Initializable {
     }
 
     @FXML
-    void onActionUpdateAppointment(ActionEvent event) {
+    void onActionUpdateAppointment(ActionEvent event) throws IOException, SQLException {
+        Appointment selectedAppointment = AppointmentTableView.getSelectionModel().getSelectedItem();
 
+        if (selectedAppointment != null) {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/Model/UpdateAppointmentForm.fxml"));
+            Parent updateView = loader.load();
+
+            UpdateAppointmentController uAC = loader.getController();
+            uAC.sendAppointment(selectedAppointment);
+
+            Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(updateView));
+            stage.show();
+            Helper.centerStage(stage);
+        }
+        else {
+            Helper.displayAlert("Select an Appointment", "No Appointment Was Selected", "In order to update, please select an Appointment", Alert.AlertType.ERROR);
+
+        }
     }
 
     @FXML
@@ -145,6 +182,80 @@ public class CustAndApptController implements Initializable {
         }
     }
 
+    @FXML
+    void allAppointmentsRadioButton(ActionEvent event) throws SQLException {
+        observableAppointmentList.clear();
+        AppointmentDAO appointmentDAO = new AppointmentDAOImp();
+        observableAppointmentList = FXCollections.observableArrayList(appointmentDAO.findAll());
+        AppointmentTableView.setItems(observableAppointmentList);
+    }
+
+    @FXML
+    void currentMonthRadioButton(ActionEvent event) throws SQLException {
+        observableAppointmentList.clear();
+        AppointmentDAO appointmentDAO = new AppointmentDAOImp();
+        List<Appointment> allAppointments = appointmentDAO.findAll();
+        List<Appointment> currentMonthAppointments = new ArrayList<>();
+        for (Appointment appointment : allAppointments) {
+            if (LocalDate.now().getMonthValue() == appointment.getLocalStartTime().getMonthValue()) {
+                currentMonthAppointments.add(appointment);
+            }
+        }
+
+        observableAppointmentList = FXCollections.observableArrayList(currentMonthAppointments);
+        AppointmentTableView.setItems(observableAppointmentList);
+
+    }
+
+    @FXML
+    void currentWeekRadioButton(ActionEvent event) throws SQLException {
+        observableAppointmentList.clear();
+        int currentWeek = LocalDate.now().get((WeekFields.of(Locale.getDefault())).weekOfWeekBasedYear());
+
+        AppointmentDAO appointmentDAO = new AppointmentDAOImp();
+        List<Appointment> allAppointments = appointmentDAO.findAll();
+        List<Appointment> currentWeekAppointments = new ArrayList<>();
+        for (Appointment appointment : allAppointments) {
+            if (currentWeek == appointment.getLocalStartTime().get((WeekFields.of(Locale.getDefault())).weekOfWeekBasedYear())) {
+                currentWeekAppointments.add(appointment);
+            }
+        }
+
+        observableAppointmentList = FXCollections.observableArrayList(currentWeekAppointments);
+        AppointmentTableView.setItems(observableAppointmentList);
+
+    }
+    public Optional<Appointment> getUpcomingAppointment(List<Appointment> appointments) {
+        Instant now = Instant.now();
+        ZoneId localZoneId = ZoneId.systemDefault(); // Adjust based on your requirements
+        LocalDateTime localNow = LocalDateTime.ofInstant(now, localZoneId);
+
+        for (Appointment appointment : appointments) {
+            LocalDateTime appointmentStart = LocalDateTime.ofInstant(appointment.getStartTime(), localZoneId);
+            if (!appointmentStart.isBefore(localNow) &&
+                    Duration.between(localNow, appointmentStart).toMinutes() <= 15) {
+                return Optional.of(appointment);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void showAlertForUpcomingAppointment(List<Appointment> appointments) {
+        Optional<Appointment> upcomingAppointment = getUpcomingAppointment(appointments);
+
+        if (upcomingAppointment.isPresent()) {
+            Appointment appointment = upcomingAppointment.get();
+            String message = String.format("You have an upcoming appointment.\nID: %d\nDate: %s\nTime: %s",
+                    appointment.getAppointmentID(),
+                    appointment.getStartTime().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    appointment.getStartTime().atZone(ZoneId.systemDefault()).toLocalTime());
+            // Display alert with the message
+            Helper.displayAlert("Upcoming Appointment", "Upcoming Appointment", message, Alert.AlertType.INFORMATION);
+        } else {
+            // Display alert indicating no upcoming appointments
+            Helper.displayAlert("No Upcoming Appointments", "No Upcoming Appointments", "You have no appointments within the next 15 minutes.", Alert.AlertType.INFORMATION);
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         CustomerDAO customerDAO = new CustomerDAOImp();
@@ -165,8 +276,8 @@ public class CustAndApptController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        ObservableList<Customer> observableCustomerList = FXCollections.observableArrayList(customerList);
-        ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList(appointmentList);
+        observableCustomerList = FXCollections.observableArrayList(customerList);
+        observableAppointmentList = FXCollections.observableArrayList(appointmentList);
         CustomerTableView.setItems(observableCustomerList);
         AppointmentTableView.setItems(observableAppointmentList);
 
@@ -184,12 +295,19 @@ public class CustAndApptController implements Initializable {
         appointmentTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         appointmentDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         appointmentLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-        appointmentStartColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        appointmentEndColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+        appointmentStartColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getLocalStartTime()));
+        appointmentEndColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper<>(cellData.getValue().getLocalEndTime()));
         appointmentContactColumn.setCellValueFactory(new PropertyValueFactory<>("contactID"));
         appointmentCustomerIDColum.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         appointmentUserIDColumn.setCellValueFactory(new PropertyValueFactory<>("userID"));
-    }
 
+        if (!hasShowAlert) {
+            Platform.runLater(() -> {
+                showAlertForUpcomingAppointment(observableAppointmentList);
+            });
+            hasShowAlert = true;
+        }
+
+    }
 
 }
