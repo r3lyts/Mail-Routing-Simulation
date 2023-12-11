@@ -137,6 +137,11 @@ public class CustAndApptController implements Initializable {
     }
 
     @FXML
+    void onActionReports(ActionEvent event) throws IOException {
+        Helper.nextView("/Model/ReportForm.fxml", event);
+    }
+
+    @FXML
     void onActionUpdateAppointment(ActionEvent event) throws IOException, SQLException {
         Appointment selectedAppointment = AppointmentTableView.getSelectionModel().getSelectedItem();
 
@@ -227,7 +232,7 @@ public class CustAndApptController implements Initializable {
     }
     public Optional<Appointment> getUpcomingAppointment(List<Appointment> appointments) {
         Instant now = Instant.now();
-        ZoneId localZoneId = ZoneId.systemDefault(); // Adjust based on your requirements
+        ZoneId localZoneId = ZoneId.systemDefault();
         LocalDateTime localNow = LocalDateTime.ofInstant(now, localZoneId);
 
         for (Appointment appointment : appointments) {
@@ -249,10 +254,8 @@ public class CustAndApptController implements Initializable {
                     appointment.getAppointmentID(),
                     appointment.getStartTime().atZone(ZoneId.systemDefault()).toLocalDate(),
                     appointment.getStartTime().atZone(ZoneId.systemDefault()).toLocalTime());
-            // Display alert with the message
             Helper.displayAlert("Upcoming Appointment", "Upcoming Appointment", message, Alert.AlertType.INFORMATION);
         } else {
-            // Display alert indicating no upcoming appointments
             Helper.displayAlert("No Upcoming Appointments", "No Upcoming Appointments", "You have no appointments within the next 15 minutes.", Alert.AlertType.INFORMATION);
         }
     }

@@ -85,5 +85,6 @@
       </RadioButton>
       <RadioButton layoutX="709.0" layoutY="75.0" mnemonicParsing="false" onAction="#currentMonthRadioButton" text="Current Month" toggleGroup="$appointmentSelection" />
       <RadioButton layoutX="576.0" layoutY="75.0" mnemonicParsing="false" onAction="#currentWeekRadioButton" text="Current Week" toggleGroup="$appointmentSelection" />
+      <Button layoutX="1110.0" layoutY="614.0" mnemonicParsing="false" onAction="#onActionReports" prefHeight="29.0" prefWidth="127.0" text="Reports" />
    </children>
 </AnchorPane>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ReportController">
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" prefHeight="37.0" prefWidth="128.0" text="Reports">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
+      <TableView fx:id="contactOverviewTableView" layoutX="56.0" layoutY="125.0" prefHeight="200.0" prefWidth="1169.0">
+        <columns>
+          <TableColumn fx:id="contactTableAppointmentID" prefWidth="48.0" text="ID" />
+          <TableColumn fx:id="contactTableAppointmentTitle" prefWidth="131.0" text="Title" />
+            <TableColumn fx:id="contactTableAppointmentType" prefWidth="116.0" text="Type" />
+            <TableColumn fx:id="contactTableAppointmentDescription" prefWidth="219.0" text="Description" />
+            <TableColumn fx:id="contactTableAppointmentLocation" prefWidth="146.0" text="Location" />
+            <TableColumn fx:id="contactTableAppointmentStart" prefWidth="193.0" text="Start Date" />
+            <TableColumn fx:id="contactTableAppointmentEnd" prefWidth="229.0" text="End Date" />
+            <TableColumn fx:id="contactTableAppointmentCustomerID" prefWidth="85.0" text="Customer ID" />
+        </columns>
+      </TableView>
+      <Label layoutX="1002.0" layoutY="91.0" prefHeight="22.0" prefWidth="63.0" text="Contact">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="contactComboBox" layoutX="1075.0" layoutY="89.0" prefWidth="150.0" />
+      <TableView fx:id="AppointmentTypeTableView" layoutX="56.0" layoutY="406.0" prefHeight="200.0" prefWidth="519.0">
+        <columns>
+          <TableColumn fx:id="appointmentType" prefWidth="147.0" text="Appointment Type" />
+          <TableColumn fx:id="appointmentMonth" prefWidth="168.0" text="Appointment Month" />
+            <TableColumn fx:id="totalAppointments" prefWidth="203.0" text="Total Appointments" />
+        </columns>
+      </TableView>
+      <Line endX="1159.0" layoutX="121.0" layoutY="344.0" startX="-121.0" />
+      <Line endX="-5.5" endY="375.0" layoutX="613.0" layoutY="345.0" startX="-5.5" startY="-0.5" />
+      <TableView fx:id="numOfAppointmentsByContactTableView" layoutX="793.0" layoutY="406.0" prefHeight="200.0" prefWidth="359.0">
+        <columns>
+          <TableColumn fx:id="contactName" prefWidth="146.0" text="Contact Name" />
+          <TableColumn fx:id="contactTotalAppointments" prefWidth="212.0" text="Total Appointments" />
+        </columns>
+      </TableView>
+      <Button layoutX="1152.0" layoutY="644.0" mnemonicParsing="false" onAction="#onActionBack" prefHeight="44.0" prefWidth="106.0" text="Back">
+         <font>
+            <Font size="21.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
