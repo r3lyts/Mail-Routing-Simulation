@@ -8,9 +8,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -45,11 +49,28 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
+
         if (isValidLogin(username, password)) {
+            writeLoginActivity(username, true);
             Helper.nextView("/Model/CustAndAppt.fxml", event);
         }
         else {
+            writeLoginActivity(username, false);
             Helper.displayAlert(bundle.getString("login.loginErrorTitle"), bundle.getString("login.loginErrorHeader"), bundle.getString("login.loginErrorMessage"), Alert.AlertType.ERROR);
+        }
+    }
+
+    public void writeLoginActivity(String username, boolean isSuccess) {
+        String fileName = "login_activity.txt";
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        try (FileWriter fileWriter = new FileWriter(fileName, true);
+             PrintWriter printWriter = new PrintWriter(fileWriter)) {
+            printWriter.printf("User: %s, Login Time: %s, Success: %b%n",
+                    username, now.format(formatter), isSuccess);
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle the exception as appropriate for your application
         }
     }
 

@@ -99,6 +99,7 @@ public class ReportController implements Initializable {
             countMap.put(key, countMap.getOrDefault(key, 0) + 1);
         }
 
+        //LAMBDA EXPRESSION
         return countMap.entrySet().stream()
                 .map(entry -> {
                     String[] parts = entry.getKey().split(" - ");
@@ -176,6 +177,7 @@ public class ReportController implements Initializable {
 
             //Contact Summary Table
             contactComboBox.setItems(FXCollections.observableArrayList(contactNames));
+            //LAMBDA EXPRESSION
             contactComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
                 if (newSelection != null) {
                     try {
