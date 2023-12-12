@@ -3,6 +3,11 @@ package DAO;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * Class for opening the connection to the database.
+ *
+ * @author tylersmall and wgu class video
+ */
 public abstract class DBConnection {
     private static final String protocol = "jdbc";
     private static final String vendor = ":mysql:";
@@ -14,6 +19,9 @@ public abstract class DBConnection {
     private static String password = "Passw0rd!"; // Password
     public static Connection connection;  // Connection Interface
 
+    /**
+     * Opens the connection the database.
+     */
     public static void openConnection() {
         try {
             Class.forName(driver); // Locate Driver
@@ -24,6 +32,9 @@ public abstract class DBConnection {
         }
     }
 
+    /**
+     * Closes the connection the database.
+     */
     public static void closeConnection() {
         try {
             connection.close();

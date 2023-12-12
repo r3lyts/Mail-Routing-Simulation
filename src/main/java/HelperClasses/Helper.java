@@ -19,8 +19,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Class for holding methods that are need throughout the program.
+ *
+ * @author tylersmall
+ */
 public class Helper {
 
+    /**
+     * Displays an alert
+     * @param title
+     * @param header
+     * @param message
+     * @param alertType
+     */
     public static void displayAlert(String title, String header, String message, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -30,6 +42,12 @@ public class Helper {
         alert.showAndWait();
     }
 
+    /**
+     * Takes the user to the next view.
+     * @param fxmlFile
+     * @param event
+     * @throws IOException
+     */
     public static void nextView(String fxmlFile, ActionEvent event) throws IOException {
         // Load the new scene
         FXMLLoader loader = new FXMLLoader(Helper.class.getResource(fxmlFile));
@@ -43,6 +61,10 @@ public class Helper {
         centerStage(stage);
     }
 
+    /**
+     * Centers the view on the screen
+     * @param stage
+     */
     public static void centerStage(Stage stage) {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
@@ -56,11 +78,12 @@ public class Helper {
     }
 
     /**
-     * Generate Time slots for any combo box that needs time.
+     * Generates the time needed for the combo boxes
+     * @return list of time slots every 15 minutes in string format
      */
     public static List<String> generateTimeSlots() {
         List<String> timeSlots = new ArrayList<>();
-        LocalTime startTime = LocalTime.of(8, 0); // Starting at 8:00
+        LocalTime startTime = LocalTime.of(0, 15); // Starting at 00:15
         LocalTime endTime = LocalTime.of(23, 45); // Ending at 23:45
         LocalTime time = startTime;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -73,18 +96,34 @@ public class Helper {
         return timeSlots;
     }
 
+    /**
+     * Converts local time to UTC
+     * @param localDateTime
+     * @return time in UTC
+     */
     public static Instant convertLocalToUTC(LocalDateTime localDateTime) {
         ZoneId localZoneId = ZoneId.systemDefault(); // Gets the system's default time zone
         ZonedDateTime localZonedDateTime = ZonedDateTime.of(localDateTime, localZoneId);
         return localZonedDateTime.withZoneSameInstant(ZoneOffset.UTC).toInstant();
     }
 
+    /**
+     * Converts UTC time to local time
+     * @param utcInstant
+     * @return time in local
+     */
     public static LocalDateTime convertUTCToLocal(Instant utcInstant) {
         ZoneId localZoneId = ZoneId.systemDefault(); // Gets the system's default time zone
         ZonedDateTime localZonedDateTime = utcInstant.atZone(ZoneOffset.UTC).withZoneSameInstant(localZoneId);
         return localZonedDateTime.toLocalDateTime();
     }
 
+    /**
+     * Combines a localdate and timestring into one localdatetime
+     * @param localDate
+     * @param timeString
+     * @return localdatetime object
+     */
     public static LocalDateTime combineDateAndTime(LocalDate localDate, String timeString) {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         LocalTime time = LocalTime.parse(timeString, timeFormatter);
@@ -93,6 +132,11 @@ public class Helper {
         return localDateTime;
     }
 
+    /**
+     * Converts local time to eastern time
+     * @param localDateTime
+     * @return time in EST
+     */
     public static ZonedDateTime convertLocalToEastern(LocalDateTime localDateTime) {
         ZoneId localZoneId = ZoneId.systemDefault(); // Local time zone
         ZoneId easternZoneId = ZoneId.of("America/New_York"); // Eastern Time zone
