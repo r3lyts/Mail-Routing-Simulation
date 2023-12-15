@@ -22,6 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Update customer controller menu.
+ *
+ * @author tylersmall
+ */
 public class UpdateCustomerController implements Initializable {
 
 
@@ -46,11 +51,22 @@ public class UpdateCustomerController implements Initializable {
     @FXML
     private ComboBox<String> stateComboBox;
 
+    /**
+     * Takes the user back to the main menu.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
         Helper.nextView("/Model/CustAndAppt.fxml", event);
     }
 
+    /**
+     * Updates the customer to the database if valid.
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     void onActionSave(ActionEvent event) throws SQLException, IOException {
         FirstLevelDivisionDAO fldDAO = new FirstLevelDivisionDAOimp();
@@ -77,6 +93,11 @@ public class UpdateCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Checks to see if the customer is valid and all fields are correctly checked.
+     * @param customer
+     * @return boolean
+     */
     public boolean isValidCustomer(Customer customer) {
         if (nameTextField.getText().isEmpty() || addressTextField.getText().isEmpty()
                 || phoneTextField.getText().isEmpty() || postalCodeTextField.getText().isEmpty()) {
@@ -90,6 +111,11 @@ public class UpdateCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Sends selected customer to the view to prepopulate the fields and combo boxes.
+     * @param customer
+     * @throws SQLException
+     */
     public void sendCustomer(Customer customer) throws SQLException {
         CountryDAO countryDAO = new CountryDAOImp();
         FirstLevelDivisionDAO fldDAO = new FirstLevelDivisionDAOimp();
@@ -109,6 +135,11 @@ public class UpdateCustomerController implements Initializable {
 
     }
 
+    /**
+     * Initializes the text fields and combo boxes with the necessary data.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         List<String> countryNames = new ArrayList<>();

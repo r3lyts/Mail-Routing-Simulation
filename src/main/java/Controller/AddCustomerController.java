@@ -20,6 +20,11 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * Add Customer Controller for the add customer view
+ *
+ * @author tylersmall
+ */
 public class AddCustomerController implements Initializable {
 
     @FXML
@@ -45,11 +50,22 @@ public class AddCustomerController implements Initializable {
 
     private int selectedStateID;
 
+    /**
+     * Takes user back to the main menu
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
         Helper.nextView("/Model/CustAndAppt.fxml", event);
     }
 
+    /**
+     * Saves the customer info to the database
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     void onActionSave(ActionEvent event) throws SQLException, IOException {
         Customer customer = new Customer();
@@ -94,6 +110,11 @@ public class AddCustomerController implements Initializable {
         }
     }
 
+    /**
+     * Initializes the view and populates the combo boxes
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         List<String> countryNames = new ArrayList<>();

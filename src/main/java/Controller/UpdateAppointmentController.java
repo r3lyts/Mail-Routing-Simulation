@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the update appointment menu.
+ */
 public class UpdateAppointmentController implements Initializable {
 
     @FXML
@@ -63,12 +66,23 @@ public class UpdateAppointmentController implements Initializable {
     @FXML
     private ComboBox<Integer> userIDComboBox;
 
+    /**
+     * Takes the user back to the main menu.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
         Helper.nextView("/Model/CustAndAppt.fxml", event);
     }
 
 
+    /**
+     * Saves changes made to an existing contact into the database.
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     void onActionSave(ActionEvent event) throws SQLException, IOException {
         AppointmentDAO appointmentDAO = new AppointmentDAOImp();
@@ -103,6 +117,12 @@ public class UpdateAppointmentController implements Initializable {
 
     }
 
+    /**
+     * Checks to see if the appointment is valid.
+     * @param appointment
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean isValidAppointment(Appointment appointment) throws SQLException {
         //Checks Text fields to see if they are empty
         if (typeTextField.getText().isEmpty() || titleTextField.getText().isEmpty() || locationTextField.getText().isEmpty()
@@ -134,6 +154,13 @@ public class UpdateAppointmentController implements Initializable {
         return true;
     }
 
+    /**
+     * Checks to see if the scheduling time is valid.
+     * @param startTime
+     * @param endTime
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean isValidSchedulingTime(LocalDateTime startTime, LocalDateTime endTime) throws SQLException {
         AppointmentDAO appointmentDAO = new AppointmentDAOImp();
         ContactDAO contactDAO = new ContactDAOImp();
@@ -166,6 +193,11 @@ public class UpdateAppointmentController implements Initializable {
         return true;
     }
 
+    /**
+     * Checks to see if local time falls into EST business hours.
+     * @param dateTime
+     * @return boolean
+     */
     public boolean isEasternTimeWithinRange(LocalDateTime dateTime) {
         ZonedDateTime easternTime = convertToEastern(dateTime);
         LocalTime time = easternTime.toLocalTime();
@@ -176,6 +208,11 @@ public class UpdateAppointmentController implements Initializable {
         return time.isBefore(startTime) && time.isBefore(endTime);
     }
 
+    /**
+     * Converts local time to EST.
+     * @param localDateTime
+     * @return time in EST
+     */
     public ZonedDateTime convertToEastern(LocalDateTime localDateTime) {
         ZoneId easternZoneId = ZoneId.of("America/New_York"); // Eastern Time zone
         ZonedDateTime easternZonedDateTime = localDateTime.atZone(easternZoneId);
@@ -184,6 +221,11 @@ public class UpdateAppointmentController implements Initializable {
     }
 
 
+    /**
+     * Sends the selected appointment to the view.
+     * @param appointment
+     * @throws SQLException
+     */
     public void sendAppointment(Appointment appointment) throws SQLException {
         //Text fields
         idTextField.setText(String.valueOf(appointment.getAppointmentID()));
@@ -217,6 +259,11 @@ public class UpdateAppointmentController implements Initializable {
 
     }
 
+    /**
+     * Initializes the necessary fields for the selected appointment.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ContactDAO contactDAO = new ContactDAOImp();

@@ -28,6 +28,11 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Displays three separate reports regarding combinations of customers and appointments.
+ *
+ * @author tylersmall
+ */
 public class ReportController implements Initializable {
 
     @FXML
@@ -83,11 +88,21 @@ public class ReportController implements Initializable {
     @FXML
     private TableColumn<ContactAppointmentSummary, String> contactName;
 
+    /**
+     * Takes the user back to the main screen.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionBack(ActionEvent event) throws IOException {
         Helper.nextView("/Model/CustAndAppt.fxml", event);
     }
 
+    /**
+     * Aggreagates all appointments into a list that holds and the month of number of appointments per month.
+     * @param appointments
+     * @return lists of aggregated appointments.
+     */
     public List<AppointmentSummary> aggregateAppointments(List<Appointment> appointments) {
         Map<String, Integer> countMap = new HashMap<>();
 
@@ -111,6 +126,12 @@ public class ReportController implements Initializable {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Aggregates contact appointments into a list that shows how many appointments each contact has.
+     * @param appointments
+     * @return list of appointments per contact
+     * @throws SQLException
+     */
     public List<ContactAppointmentSummary> aggregateContactAppointments(List<Appointment> appointments) throws SQLException {
         Map<String, Integer> appointmentCount = new HashMap<>();
         ContactDAO contactDAO = new ContactDAOImp();
@@ -129,6 +150,10 @@ public class ReportController implements Initializable {
         return summaryList;
     }
 
+    /**
+     * Updates the contact view based on the selection of the combo box.
+     * @throws SQLException
+     */
     private void updateContactView() throws SQLException {
         AppointmentDAO appointmentDAO = new AppointmentDAOImp();
         ContactDAO contactDAO = new ContactDAOImp();
@@ -155,6 +180,11 @@ public class ReportController implements Initializable {
         contactOverviewTableView.setItems(FXCollections.observableArrayList(contactAppointments));
     }
 
+    /**
+     * Initializes the tables with data.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         AppointmentDAO appointmentDAO = new AppointmentDAOImp();

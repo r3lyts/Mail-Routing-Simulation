@@ -18,6 +18,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * The login view for the program.
+ *
+ * @author tylersmall
+ */
 public class LoginController {
 
     @FXML
@@ -44,6 +49,13 @@ public class LoginController {
         passwordLabel.setText(bundle.getString("login.password"));
         loginButton.setText(bundle.getString("login.login"));
     }
+
+    /**
+     * Logs the user in or throws and error message if username/password is incorrect.
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     void onActionLogin(ActionEvent event) throws SQLException, IOException {
         String username = usernameField.getText();
@@ -60,6 +72,11 @@ public class LoginController {
         }
     }
 
+    /**
+     * Logs the user activity to a text file
+     * @param username
+     * @param isSuccess
+     */
     public void writeLoginActivity(String username, boolean isSuccess) {
         String fileName = "login_activity.txt";
         LocalDateTime now = LocalDateTime.now();
@@ -74,11 +91,21 @@ public class LoginController {
         }
     }
 
+    /**
+     * Updates the timezone label to the user's time zone.
+     */
     public void updateTimezoneLabel() {
         ZoneId systemDefaultZoneId = ZoneId.systemDefault();
         timeZoneLabel.setText(systemDefaultZoneId.toString());
     }
 
+    /**
+     * Checks to see if the login is valid.
+     * @param username
+     * @param password
+     * @return
+     * @throws SQLException
+     */
     public boolean isValidLogin(String username, String password) throws SQLException {
         User user = userDAO.findUserByUsername(username);
 

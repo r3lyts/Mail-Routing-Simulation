@@ -30,6 +30,12 @@ import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
+/**
+ * This is the main view of the program displaying both customers and appointments.
+ *
+ * @author tylersmall
+ */
+
 public class CustAndApptController implements Initializable {
 
     @FXML
@@ -89,16 +95,31 @@ public class CustAndApptController implements Initializable {
     private ObservableList<Customer> observableCustomerList = FXCollections.observableArrayList();
     private ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList();
 
+    /**
+     * Takes user to the add appointment menu.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException {
         Helper.nextView("/Model/AddAppointmentForm.fxml", event);
     }
 
+    /**
+     * Takes the user to add customer menu.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionAddCustomer(ActionEvent event) throws IOException {
         Helper.nextView("/Model/AddCustomerForm.fxml", event);
     }
 
+    /**
+     * Deletes an appointment selected from the appointment table.
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     void onActionDeleteAppointment(ActionEvent event) throws SQLException {
         Appointment selectedAppointment = AppointmentTableView.getSelectionModel().getSelectedItem();
@@ -116,6 +137,11 @@ public class CustAndApptController implements Initializable {
         }
     }
 
+    /**
+     * Deletes a customer selected from the customer table.
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     void onActionDeleteCustomer(ActionEvent event) throws SQLException {
         Customer selectedCustomer = CustomerTableView.getSelectionModel().getSelectedItem();
@@ -131,16 +157,32 @@ public class CustAndApptController implements Initializable {
         }
     }
 
+    /**
+     * Logs the user out and takes the user back to the login screen.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionLogout(ActionEvent event) throws IOException {
         Helper.nextView("/Model/login-form.fxml", event);
     }
 
+    /**
+     * Takes the user to the reports view.
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionReports(ActionEvent event) throws IOException {
         Helper.nextView("/Model/ReportForm.fxml", event);
     }
 
+    /**
+     * Takes the user to the update appointment screen with the selected appointment.
+     * @param event
+     * @throws IOException
+     * @throws SQLException
+     */
     @FXML
     void onActionUpdateAppointment(ActionEvent event) throws IOException, SQLException {
         Appointment selectedAppointment = AppointmentTableView.getSelectionModel().getSelectedItem();
@@ -164,6 +206,12 @@ public class CustAndApptController implements Initializable {
         }
     }
 
+    /**
+     * Takes the user to the update customer screen with the selected customer.
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     void onActionUpdateCustomer(ActionEvent event) throws SQLException, IOException {
         Customer selectedCustomer = CustomerTableView.getSelectionModel().getSelectedItem();
@@ -187,6 +235,11 @@ public class CustAndApptController implements Initializable {
         }
     }
 
+    /**
+     * Loads the appointment table with all appointments.
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     void allAppointmentsRadioButton(ActionEvent event) throws SQLException {
         observableAppointmentList.clear();
@@ -195,6 +248,11 @@ public class CustAndApptController implements Initializable {
         AppointmentTableView.setItems(observableAppointmentList);
     }
 
+    /**
+     * Loads the appointment table with appointments from the current month.
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     void currentMonthRadioButton(ActionEvent event) throws SQLException {
         observableAppointmentList.clear();
@@ -212,6 +270,11 @@ public class CustAndApptController implements Initializable {
 
     }
 
+    /**
+     * Loads the appointment table with appointments from the current week.
+     * @param event
+     * @throws SQLException
+     */
     @FXML
     void currentWeekRadioButton(ActionEvent event) throws SQLException {
         observableAppointmentList.clear();
@@ -230,6 +293,12 @@ public class CustAndApptController implements Initializable {
         AppointmentTableView.setItems(observableAppointmentList);
 
     }
+
+    /**
+     * Gets an appointment that is happening within 15 minutes of a login.
+     * @param appointments
+     * @return
+     */
     public Optional<Appointment> getUpcomingAppointment(List<Appointment> appointments) {
         Instant now = Instant.now();
         ZoneId localZoneId = ZoneId.systemDefault();
@@ -245,6 +314,10 @@ public class CustAndApptController implements Initializable {
         return Optional.empty();
     }
 
+    /**
+     * Shows the alert for an appointment that is happening within 15 mintues of login.
+     * @param appointments
+     */
     public void showAlertForUpcomingAppointment(List<Appointment> appointments) {
         Optional<Appointment> upcomingAppointment = getUpcomingAppointment(appointments);
 
@@ -259,6 +332,12 @@ public class CustAndApptController implements Initializable {
             Helper.displayAlert("No Upcoming Appointments", "No Upcoming Appointments", "You have no appointments within the next 15 minutes.", Alert.AlertType.INFORMATION);
         }
     }
+
+    /**
+     * Initializes the tables with data.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         CustomerDAO customerDAO = new CustomerDAOImp();

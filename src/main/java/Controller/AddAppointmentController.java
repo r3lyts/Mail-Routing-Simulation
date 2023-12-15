@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
+ * Appointment controller for the add appointment menu in the application.
  *
+ * @author tylersmall
  */
 public class AddAppointmentController implements Initializable {
 
@@ -63,11 +65,23 @@ public class AddAppointmentController implements Initializable {
     @FXML
     private ComboBox<Integer> userIDComboBox;
 
+    /**
+     * Takes user back to the main menu
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void onActionCancel(ActionEvent event) throws IOException {
         Helper.nextView("/Model/CustAndAppt.fxml", event);
     }
 
+
+    /**
+     * Saves the added appointment and adds it to the database.
+     * @param event
+     * @throws SQLException
+     * @throws IOException
+     */
     @FXML
     void onActionSave(ActionEvent event) throws SQLException, IOException {
         Appointment appointment = new Appointment();
@@ -101,6 +115,12 @@ public class AddAppointmentController implements Initializable {
 
     }
 
+    /**
+     * Checks to see if the appointment is valid.
+     * @param appointment
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean isValidAppointment(Appointment appointment) throws SQLException {
         //Checks Text fields to see if they are empty
         if (typeTextField.getText().isEmpty() || titleTextField.getText().isEmpty() || locationTextField.getText().isEmpty()
@@ -132,6 +152,13 @@ public class AddAppointmentController implements Initializable {
         return true;
     }
 
+    /**
+     * Checks to see if the scheduling time for the appointment is valid and that the customer is not scheduled with overlapping appointments.
+     * @param startTime
+     * @param endTime
+     * @return boolean
+     * @throws SQLException
+     */
     public boolean isValidSchedulingTime(LocalDateTime startTime, LocalDateTime endTime) throws SQLException {
         AppointmentDAO appointmentDAO = new AppointmentDAOImp();
         ContactDAO contactDAO = new ContactDAOImp();
@@ -150,12 +177,11 @@ public class AddAppointmentController implements Initializable {
         }
 
         //checks contacts for simultaneous appointments
-        if (contactComboBox != null) {
+        if (customerIDComboBox != null) {
             for (Appointment appointment : appointments) {
-                String contactName = contactDAO.getContactName(appointment.getContactID());
-                if (contactComboBox.getValue().equals(contactName)) {
+                if ((customerIDComboBox.getValue() == appointment.getCustomerID())) {
                     if (Helper.convertUTCToLocal(appointment.getStartTime()).isBefore(endTime) && startTime.isBefore(Helper.convertUTCToLocal(appointment.getEndTime()))) {
-                        Helper.displayAlert("Scheduling Conflict", "The contact has conflicting appointments", "Please schedule a start and end time where the contact has no appointments scheduled.", Alert.AlertType.ERROR);
+                        Helper.displayAlert("Scheduling Conflict", "The customer has conflicting appointments", "Please schedule a start and end time where the customer has no appointments scheduled.", Alert.AlertType.ERROR);
                         return false;
                     }
                 }
@@ -165,6 +191,11 @@ public class AddAppointmentController implements Initializable {
         return true;
     }
 
+    /**
+     * Checks to see if the local date is within range of EST business hours.
+     * @param dateTime
+     * @return boolean
+     */
     public boolean isEasternTimeWithinRange(LocalDateTime dateTime) {
         ZonedDateTime easternTime = convertToEastern(dateTime);
         LocalTime time = easternTime.toLocalTime();
@@ -175,6 +206,11 @@ public class AddAppointmentController implements Initializable {
         return time.isBefore(startTime) && time.isBefore(endTime);
     }
 
+    /**
+     * Converts local time to EST
+     * @param localDateTime
+     * @return EST time
+     */
     public ZonedDateTime convertToEastern(LocalDateTime localDateTime) {
         ZoneId easternZoneId = ZoneId.of("America/New_York"); // Eastern Time zone
         ZonedDateTime easternZonedDateTime = localDateTime.atZone(easternZoneId);
@@ -183,6 +219,11 @@ public class AddAppointmentController implements Initializable {
     }
 
 
+    /**
+     * Initializes the view with data
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ContactDAO contactDAO = new ContactDAOImp();
