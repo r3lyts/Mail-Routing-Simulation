@@ -92,6 +92,7 @@ public class CustAndApptController implements Initializable {
 
     private static boolean hasShowAlert = false;
 
+
     private ObservableList<Customer> observableCustomerList = FXCollections.observableArrayList();
     private ObservableList<Appointment> observableAppointmentList = FXCollections.observableArrayList();
 
@@ -143,7 +144,7 @@ public class CustAndApptController implements Initializable {
      * @throws SQLException
      */
     @FXML
-    void onActionDeleteCustomer(ActionEvent event) throws SQLException {
+    void onActionDeleteCustomer(ActionEvent event) throws SQLException, IOException {
         Customer selectedCustomer = CustomerTableView.getSelectionModel().getSelectedItem();
         CustomerDAO customerDAO = new CustomerDAOImp();
 
@@ -151,6 +152,8 @@ public class CustAndApptController implements Initializable {
             customerDAO.deleteCustomer(selectedCustomer.getCustomerID());
             CustomerTableView.getItems().remove(selectedCustomer);
             Helper.displayAlert("Customer Deletion", "Customer Deletion", "Customer was successfully deleted.", Alert.AlertType.INFORMATION);
+            Helper.nextView("/Model/CustAndAppt.fxml", event);
+
         }
         else {
             Helper.displayAlert("Select an Item", "No Customer was Selected", "In order to delete, please select a Customer.", Alert.AlertType.ERROR);
@@ -164,6 +167,7 @@ public class CustAndApptController implements Initializable {
      */
     @FXML
     void onActionLogout(ActionEvent event) throws IOException {
+        hasShowAlert = false;
         Helper.nextView("/Model/login-form.fxml", event);
     }
 

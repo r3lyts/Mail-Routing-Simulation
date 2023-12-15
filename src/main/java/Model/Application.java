@@ -10,7 +10,9 @@ import java.sql.SQLException;
 
 /**
  * @author tylersmall
- * This is the main class that launches the login screen.
+ * This is the main class and entry point into the program.
+ *
+ * LOCATION FOR LAMBDAs: Controller/.ReportController.aggregateAppointments method and Controller.ReportController.initialize method
  */
 public class Application extends javafx.application.Application {
     /**

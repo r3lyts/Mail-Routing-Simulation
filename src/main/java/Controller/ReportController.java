@@ -102,6 +102,8 @@ public class ReportController implements Initializable {
      * Aggreagates all appointments into a list that holds and the month of number of appointments per month.
      * @param appointments
      * @return lists of aggregated appointments.
+     *
+     * CONTAINS LAMBDA: The reason for this lambda expression is to change the data from countMap which is a Map into a list of AppointmentSummary objects.
      */
     public List<AppointmentSummary> aggregateAppointments(List<Appointment> appointments) {
         Map<String, Integer> countMap = new HashMap<>();
@@ -136,12 +138,19 @@ public class ReportController implements Initializable {
         Map<String, Integer> appointmentCount = new HashMap<>();
         ContactDAO contactDAO = new ContactDAOImp();
 
+        // Step 1: Initialize the map with all contacts and count 0
+        List<Contact> allContacts = contactDAO.findAll();
+        for (Contact contact : allContacts) {
+            appointmentCount.put(contact.getContactName(), 0);
+        }
 
+        // Step 2: Count the appointments for each contact
         for (Appointment appointment : appointments) {
             String contactName = contactDAO.getContactName(appointment.getContactID());
             appointmentCount.put(contactName, appointmentCount.getOrDefault(contactName, 0) + 1);
         }
 
+        // Step 3: Create the summary list
         List<ContactAppointmentSummary> summaryList = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : appointmentCount.entrySet()) {
             summaryList.add(new ContactAppointmentSummary(entry.getKey(), entry.getValue()));
@@ -184,6 +193,8 @@ public class ReportController implements Initializable {
      * Initializes the tables with data.
      * @param url
      * @param resourceBundle
+     *
+     * CONTAINS LAMBDA: Since we needed to add a listener to the contact combo box, a lambda was used to control the selection of the contact and change the table based on that selection.
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
